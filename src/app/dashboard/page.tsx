@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { useFormState } from "react-dom";
+import React, { useActionState } from "react";
 import { DataUploadForm } from "@/components/justicelens/DataUploadForm";
 import { ResultsDisplay } from "@/components/justicelens/ResultsDisplay";
 import type { AnalysisState } from "./actions";
@@ -11,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 const initialState: AnalysisState = {};
 
 export default function DashboardPage() {
-  const [state, formAction] = useFormState(analyzeDocumentAction, initialState);
+  const [state, formAction] = useActionState(analyzeDocumentAction, initialState);
 
   return (
     <div className="space-y-8">
