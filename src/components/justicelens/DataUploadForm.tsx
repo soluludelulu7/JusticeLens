@@ -6,10 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import type { AnalysisState } from "@/app/dashboard/actions";
-import { FileUp, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import { useState, useId } from "react";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -35,6 +34,7 @@ export function DataUploadForm({
   state: AnalysisState;
 }) {
   const [significance, setSignificance] = useState(0.05);
+  const selectKey = useId();
 
   return (
     <form action={formAction} className="space-y-6">
@@ -49,7 +49,7 @@ export function DataUploadForm({
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="statisticalTest">Statistical Test</Label>
-          <Select name="statisticalTest" defaultValue="chi-squared">
+          <Select key={selectKey} name="statisticalTest" defaultValue="chi-squared">
             <SelectTrigger id="statisticalTest">
               <SelectValue placeholder="Select a test" />
             </SelectTrigger>
