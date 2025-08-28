@@ -9,6 +9,7 @@ import { Slider } from "@/components/ui/slider";
 import type { AnalysisState } from "@/app/dashboard/actions";
 import { Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { Skeleton } from "../ui/skeleton";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -94,7 +95,11 @@ export function DataUploadForm({
       )}
 
       <div className="flex justify-end">
-        <SubmitButton />
+        {isClient ? (
+          <SubmitButton />
+        ) : (
+          <Skeleton className="h-10 w-36" />
+        )}
       </div>
     </form>
   );
