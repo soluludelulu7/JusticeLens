@@ -1,1 +1,6 @@
-// Flows will be imported for their side effects in this file.
+import { config } from 'dotenv';
+config();
+
+import '@/ai/flows/extract-court-data.ts';
+import '@/ai/flows/generate-appeal-advice.ts';
+import '@/ai/flows/detect-bias.ts';
