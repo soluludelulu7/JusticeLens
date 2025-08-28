@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import type { AnalysisState } from "@/app/dashboard/actions";
 import { Loader2 } from "lucide-react";
-import { useState, useId } from "react";
+import { useState, useEffect } from "react";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -34,7 +34,12 @@ export function DataUploadForm({
   state: AnalysisState;
 }) {
   const [significance, setSignificance] = useState(0.05);
-  const selectKey = useId();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
 
   return (
     <form action={formAction} className="space-y-6">
@@ -49,16 +54,20 @@ export function DataUploadForm({
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="statisticalTest">Statistical Test</Label>
-          <Select key={selectKey} name="statisticalTest" defaultValue="chi-squared">
-            <SelectTrigger id="statisticalTest">
-              <SelectValue placeholder="Select a test" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="chi-squared">Chi-Squared Test</SelectItem>
-              <SelectItem value="t-test">T-Test</SelectItem>
-              <SelectItem value="mann-whitney-u">Mann-Whitney U Test</SelectItem>
-            </SelectContent>
-          </Select>
+          {isClient ? (
+            <Select name="statisticalTest" defaultValue="chi-squared">
+              <SelectTrigger id="statisticalTest">
+                <SelectValue placeholder="Select a test" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="chi-squared">Chi-Squared Test</SelectItem>
+                <SelectItem value="t-test">T-Test</SelectItem>
+                <SelectItem value="mann-whitney-u">Mann-Whitney U Test</SelectItem>
+              </SelectContent>
+            </Select>
+          ) : (
+            <div className="h-10 w-full rounded-md border border-input bg-background animate-pulse" />
+          )}
            {state.formErrors?.statisticalTest && (
             <p className="text-sm font-medium text-destructive">{state.formErrors.statisticalTest[0]}</p>
           )}
