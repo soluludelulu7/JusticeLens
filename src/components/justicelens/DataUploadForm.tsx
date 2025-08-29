@@ -7,17 +7,17 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import type { AnalysisState } from "@/app/dashboard/actions";
-import { Loader2 } from "lucide-react";
+import { Loader2, UploadCloud, TestTube, Target } from "lucide-react";
 import { useState, useEffect, useId } from "react";
 import { Skeleton } from "../ui/skeleton";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending} className="w-full">
+    <Button type="submit" disabled={pending} className="w-full text-base py-6">
       {pending ? (
         <>
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
           Analyzing...
         </>
       ) : (
@@ -44,21 +44,29 @@ export function DataUploadForm({
 
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form action={formAction} className="space-y-8">
       <div className="space-y-2">
-        <Label htmlFor="courtRecord">Court Record File</Label>
-        <Input id="courtRecord" name="courtRecord" type="file" accept=".pdf,.csv,.txt" required />
+        <Label htmlFor="courtRecord" className="flex items-center gap-2 text-base">
+          <UploadCloud className="w-5 h-5" />
+          Court Record File
+        </Label>
+        <Input id="courtRecord" name="courtRecord" type="file" accept=".pdf,.csv,.txt" required 
+          className="file:text-primary file:font-semibold"
+        />
         {state.formErrors?.courtRecord && (
           <p className="text-sm font-medium text-destructive">{state.formErrors.courtRecord[0]}</p>
         )}
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="statisticalTest">Statistical Test</Label>
+           <Label htmlFor="statisticalTest" className="flex items-center gap-2 text-base">
+             <TestTube className="w-5 h-5" />
+             Statistical Test
+            </Label>
           {isClient ? (
             <Select key={selectId} name="statisticalTest" defaultValue="chi-squared">
-              <SelectTrigger id="statisticalTest">
+              <SelectTrigger id="statisticalTest" className="text-base">
                 <SelectValue placeholder="Select a test" />
               </SelectTrigger>
               <SelectContent>
@@ -68,14 +76,17 @@ export function DataUploadForm({
               </SelectContent>
             </Select>
           ) : (
-            <div className="h-10 w-full rounded-md border border-input bg-background animate-pulse" />
+            <Skeleton className="h-10 w-full" />
           )}
            {state.formErrors?.statisticalTest && (
             <p className="text-sm font-medium text-destructive">{state.formErrors.statisticalTest[0]}</p>
           )}
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="significanceLevel">Significance Level: {significance.toFixed(2)}</Label>
+        <div className="space-y-3">
+          <Label htmlFor="significanceLevel" className="flex items-center gap-2 text-base">
+            <Target className="w-5 h-5" />
+            Significance Level: {significance.toFixed(2)}
+          </Label>
           <Slider
             id="significanceLevel"
             name="significanceLevel"
@@ -95,11 +106,11 @@ export function DataUploadForm({
         <p className="text-sm font-medium text-destructive">{state.error}</p>
       )}
 
-      <div className="flex justify-end pt-2">
+      <div className="flex justify-end pt-4">
         {isClient ? (
           <SubmitButton />
         ) : (
-          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-12 w-full" />
         )}
       </div>
     </form>

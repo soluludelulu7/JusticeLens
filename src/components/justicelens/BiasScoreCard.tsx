@@ -9,32 +9,32 @@ export function BiasScoreCard({ biasAnalysis }: { biasAnalysis: DetectBiasOutput
   const { biasDetected, biasSummary } = biasAnalysis;
 
   return (
-    <Card>
+    <Card className="shadow-md">
       <CardHeader>
         <CardTitle>Bias Detection Summary</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div
           className={cn(
-            "flex items-center gap-4 rounded-lg p-4",
+            "flex items-start sm:items-center gap-4 rounded-lg p-4",
             biasDetected
-              ? "bg-destructive/10 text-destructive"
-              : "bg-primary/10 text-primary"
+              ? "bg-destructive/10 text-destructive-foreground"
+              : "bg-primary/10 text-primary-foreground"
           )}
         >
           {biasDetected ? (
-            <ShieldAlert className="h-8 w-8 flex-shrink-0" />
+            <ShieldAlert className="h-8 w-8 flex-shrink-0 text-destructive" />
           ) : (
-            <ShieldCheck className="h-8 w-8 flex-shrink-0" />
+            <ShieldCheck className="h-8 w-8 flex-shrink-0 text-primary" />
           )}
           <div>
-            <h3 className="text-lg font-bold">
-              {biasDetected ? "Bias Detected" : "No Significant Bias Detected"}
+            <h3 className="text-lg font-bold text-foreground">
+              {biasDetected ? "Potential Bias Detected" : "No Significant Bias Detected"}
             </h3>
-            <p className="text-sm">
+            <p className="text-sm text-muted-foreground">
               {biasDetected
-                ? "Significant disparities were found."
-                : "Sentencing patterns appear to be within fair statistical bounds."}
+                ? "Significant disparities were found in the data."
+                : "Sentencing patterns appear within statistical norms."}
             </p>
           </div>
         </div>

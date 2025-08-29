@@ -4,7 +4,7 @@ import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxi
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 // NOTE: This component uses mock data for demonstration purposes.
-// The `detectBias` AI flow returns a text summary, not structured data suitable for charting.
+// The `detectBias` AI flow returns a text summary, not structured data for charting.
 // In a real-world application, you would parse the summary or adjust the AI flow to get structured data.
 const mockData = [
   { group: 'Group A', sentenceLength: 4.5, color: "var(--color-chart-1)" },
@@ -15,7 +15,7 @@ const mockData = [
 
 export function DisparityChart() {
   return (
-    <Card>
+    <Card className="shadow-md">
       <CardHeader>
         <CardTitle>Sentencing Disparities</CardTitle>
         <CardDescription>Average sentence length by demographic group (mock data).</CardDescription>
@@ -25,14 +25,15 @@ export function DisparityChart() {
             <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={mockData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border) / 0.5)" />
-                    <XAxis dataKey="group" stroke="hsl(var(--muted-foreground))" />
-                    <YAxis unit=" yrs" stroke="hsl(var(--muted-foreground))" />
+                    <XAxis dataKey="group" stroke="hsl(var(--muted-foreground))" tickLine={false} axisLine={false} />
+                    <YAxis unit=" yrs" stroke="hsl(var(--muted-foreground))" tickLine={false} axisLine={false} />
                     <Tooltip
-                        cursor={{ fill: 'hsl(var(--muted) / 0.5)' }}
+                        cursor={{ fill: 'hsl(var(--muted) / 0.3)' }}
                         contentStyle={{
                             background: 'hsl(var(--card))',
                             borderColor: 'hsl(var(--border))',
-                            borderRadius: 'var(--radius)'
+                            borderRadius: 'var(--radius)',
+                            boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
                         }}
                     />
                     <Bar dataKey="sentenceLength" name="Avg. Sentence" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />

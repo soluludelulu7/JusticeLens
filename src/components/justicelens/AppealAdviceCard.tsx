@@ -6,7 +6,7 @@ import type { DetectBiasOutput } from "@/ai/flows/detect-bias";
 import { getAppealAdviceAction, AppealAdviceState } from "@/app/dashboard/actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Loader2, Sparkles } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "../ui/skeleton";
 
@@ -35,7 +35,7 @@ export function AppealAdviceCard({
   };
 
   return (
-    <Card className="bg-accent/20 border-accent">
+    <Card className="bg-accent/10 border-accent shadow-md">
       <CardHeader>
         <CardTitle>Generate Appeal Strategy</CardTitle>
         <CardDescription>
@@ -44,20 +44,23 @@ export function AppealAdviceCard({
       </CardHeader>
       <CardContent className="space-y-4">
         {!state.appealAdvice && !isLoading && (
-          <Button onClick={handleGetAdvice} disabled={isLoading}>
+          <Button onClick={handleGetAdvice} disabled={isLoading} variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground">
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Generating...
               </>
             ) : (
-              "Generate Appeal Advice"
+              <>
+                <Sparkles className="mr-2 h-4 w-4" />
+                Generate Appeal Advice
+              </>
             )}
           </Button>
         )}
         
         {isLoading && (
-            <div className="space-y-2">
+            <div className="space-y-2 pt-2">
                 <Skeleton className="h-4 w-1/4" />
                 <Skeleton className="h-4 w-full" />
                 <Skeleton className="h-4 w-full" />
