@@ -32,7 +32,7 @@ function ExtractedData({ data }: { data: AnalysisState['extractedData'] }) {
                             <item.icon className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
                             <div>
                                 <p className="font-semibold text-foreground">{item.label}</p>
-                                <p className="text-muted-foreground">{item.value}</p>
+                                <p className="text-muted-foreground break-words">{item.value}</p>
                             </div>
                         </li>
                     ))}
@@ -60,10 +60,10 @@ export function ResultsDisplay({ analysisState }: { analysisState: AnalysisState
   }
 
   return (
-    <div className="mt-8 space-y-8">
+    <div className="mt-8 space-y-6">
         <Separator />
         <h2 className="text-2xl font-bold text-center">Analysis Results</h2>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
             <div className="lg:col-span-1 space-y-6">
                 <BiasScoreCard biasAnalysis={biasAnalysis} />
                 <ExtractedData data={extractedData} />

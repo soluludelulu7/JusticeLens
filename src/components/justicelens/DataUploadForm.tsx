@@ -8,13 +8,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import type { AnalysisState } from "@/app/dashboard/actions";
 import { Loader2 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useId } from "react";
 import { Skeleton } from "../ui/skeleton";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending} className="w-full sm:w-auto">
+    <Button type="submit" disabled={pending} className="w-full">
       {pending ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -36,6 +36,7 @@ export function DataUploadForm({
 }) {
   const [significance, setSignificance] = useState(0.05);
   const [isClient, setIsClient] = useState(false);
+  const selectId = useId();
 
   useEffect(() => {
     setIsClient(true);
@@ -52,11 +53,11 @@ export function DataUploadForm({
         )}
       </div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="statisticalTest">Statistical Test</Label>
           {isClient ? (
-            <Select name="statisticalTest" defaultValue="chi-squared">
+            <Select key={selectId} name="statisticalTest" defaultValue="chi-squared">
               <SelectTrigger id="statisticalTest">
                 <SelectValue placeholder="Select a test" />
               </SelectTrigger>
@@ -94,11 +95,11 @@ export function DataUploadForm({
         <p className="text-sm font-medium text-destructive">{state.error}</p>
       )}
 
-      <div className="flex justify-end">
+      <div className="flex justify-end pt-2">
         {isClient ? (
           <SubmitButton />
         ) : (
-          <Skeleton className="h-10 w-36" />
+          <Skeleton className="h-10 w-full" />
         )}
       </div>
     </form>

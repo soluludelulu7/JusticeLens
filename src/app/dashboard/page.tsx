@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useActionState } from "react";
+import React, { useActionState, useId } from "react";
 import { DataUploadForm } from "@/components/justicelens/DataUploadForm";
 import { ResultsDisplay } from "@/components/justicelens/ResultsDisplay";
 import type { AnalysisState } from "./actions";
@@ -13,21 +13,21 @@ export default function DashboardPage() {
   const [state, formAction] = useActionState(analyzeDocumentAction, initialState);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div className="text-center">
         <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-          JusticeLens Dashboard
+          JusticeLens
         </h1>
-        <p className="mt-2 text-lg text-muted-foreground">
+        <p className="mt-2 text-md sm:text-lg text-muted-foreground">
           Upload court records to uncover patterns of bias and inequality.
         </p>
       </div>
 
-      <Card className="max-w-3xl mx-auto">
+      <Card className="w-full max-w-3xl mx-auto">
         <CardHeader>
-          <CardTitle>Analyze Court Record</CardTitle>
+          <CardTitle className="text-2xl">Analyze Court Record</CardTitle>
           <CardDescription>
-            Select a document and the analysis parameters to start. Our AI will extract key data and detect potential sentencing disparities.
+            Select a document and analysis parameters to start.
           </CardDescription>
         </CardHeader>
         <CardContent>
