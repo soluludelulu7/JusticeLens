@@ -188,25 +188,24 @@ export function ResultsDisplay({ analysisState }: { analysisState: AnalysisState
     return null;
   }
 
+  const cardCount = biasAnalysis.biasDetected ? 5 : 4;
+  const gridColsClass = `lg:grid-cols-${cardCount}`;
+
   return (
     <div className="mt-12 space-y-8">
         <Separator />
         <h2 className="text-3xl font-bold text-center">Analysis Results</h2>
-        <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-3">
-            <div className="lg:col-span-1 space-y-8">
-                <BiasScoreCard biasAnalysis={biasAnalysis} />
-                <ExtractedData data={extractedData} />
-            </div>
-            <div className="lg:col-span-2 space-y-8">
-                 <ActionsCard analysisState={analysisState} />
-                 <DisparityChart />
-                 {biasAnalysis.biasDetected && (
-                    <AppealAdviceCard 
-                        extractedData={extractedData} 
-                        biasAnalysis={biasAnalysis}
-                    />
-                 )}
-            </div>
+        <div className={`grid gap-8 md:grid-cols-2 ${gridColsClass}`}>
+            <BiasScoreCard biasAnalysis={biasAnalysis} />
+            <ExtractedData data={extractedData} />
+            <ActionsCard analysisState={analysisState} />
+            <DisparityChart />
+            {biasAnalysis.biasDetected && (
+              <AppealAdviceCard 
+                  extractedData={extractedData} 
+                  biasAnalysis={biasAnalysis}
+              />
+            )}
         </div>
     </div>
   );
