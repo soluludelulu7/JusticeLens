@@ -3,12 +3,16 @@
 import type { AnalysisState } from "@/app/dashboard/actions";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Gavel, FileText, UserCheck, Activity } from "lucide-react";
+import { Gavel, FileText, UserCheck, Activity, Share2, Download, FileType, FileUp } from "lucide-react";
 import { BiasScoreCard } from "./BiasScoreCard";
 import { DisparityChart } from "./DisparityChart";
 import { AppealAdviceCard } from "./AppealAdviceCard";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ShieldX } from "lucide-react";
+import { Button } from "../ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 function ExtractedData({ data }: { data: AnalysisState['extractedData'] }) {
     if (!data) return null;
@@ -43,6 +47,130 @@ function ExtractedData({ data }: { data: AnalysisState['extractedData'] }) {
     );
 }
 
+function ActionsCard({ analysisState }: { analysisState: AnalysisState }) {
+  const { extractedData, biasAnalysis } = analysisState;
+
+  const handleExportCSV = () => {
+    if (!extractedData || !biasAnalysis) return;
+    const headers = ["category", "value"];
+    const rows = [
+      ["Defendant Demographics", extractedData.defendantDemographics],
+      ["Charges", extractedData.charges],
+      ["Sentence Length", extractedData.sentenceLength],
+      ["Outcome", extractedData.outcome],
+      ["Bias Detected", biasAnalysis.biasDetected],
+      ["Bias Summary", biasAnalysis.biasSummary],
+    ];
+    let csvContent = "data:text/csv;charset=utf-8," 
+      + headers.join(",") + "\n"
+      + rows.map(e => e.map(v => `"${v}"`).join(",")).join("\n");
+    
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "justicelens_analysis.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleExportPDF = () => {
+    if (!extractedData || !biasAnalysis) return;
+    const doc = new jsPDF();
+    doc.text("JusticeLens Analysis Report", 14, 16);
+    
+    const tableData = [
+        ["Defendant Demographics", extractedData.defendantDemographics],
+        ["Charges", extractedData.charges],
+        ["Sentence Length", extractedData.sentenceLength],
+        ["Outcome", extractedData.outcome],
+    ];
+
+    (doc as any).autoTable({
+        startY: 22,
+        head: [['Extracted Case Details', '']],
+        body: tableData,
+        theme: 'striped',
+        headStyles: { fillColor: [70, 132, 153] }
+    });
+
+    const finalY = (doc as any).lastAutoTable.finalY;
+
+    (doc as any).autoTable({
+        startY: finalY + 10,
+        head: [['Bias Detection Summary', '']],
+        body: [
+            ['Bias Detected', String(biasAnalysis.biasDetected)],
+            ['Analyst\'s Summary', biasAnalysis.biasSummary],
+        ],
+        theme: 'striped',
+        headStyles: { fillColor: biasAnalysis.biasDetected ? [220, 53, 69] : [70, 132, 153] }
+    });
+
+    doc.save("justicelens_analysis.pdf");
+  };
+
+  const handleShareEmail = () => {
+    if (!extractedData || !biasAnalysis) return;
+    const subject = "JusticeLens Analysis Results";
+    const body = `
+      Here is the summary of the JusticeLens analysis:
+
+      Extracted Data:
+      - Demographics: ${extractedData.defendantDemographics}
+      - Charges: ${extractedData.charges}
+      - Sentence: ${extractedData.sentenceLength}
+      - Outcome: ${extractedData.outcome}
+
+      Bias Analysis:
+      - Bias Detected: ${biasAnalysis.biasDetected}
+      - Summary: ${biasAnalysis.biasSummary}
+    `;
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
+  return (
+    <Card className="shadow-md">
+      <CardHeader>
+        <CardTitle>Actions</CardTitle>
+        <CardDescription>Export or share your analysis results.</CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-wrap gap-4">
+        <TooltipProvider>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button variant="outline" onClick={handleExportCSV}><FileType className="mr-2" /> Export CSV</Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>Download the results as a CSV file.</p>
+                </TooltipContent>
+            </Tooltip>
+        </TooltipProvider>
+        <TooltipProvider>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button variant="outline" onClick={handleExportPDF}><FileUp className="mr-2" /> Export PDF</Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>Download the results as a PDF document.</p>
+                </TooltipContent>
+            </Tooltip>
+        </TooltipProvider>
+        <TooltipProvider>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button variant="outline" onClick={handleShareEmail}><Share2 className="mr-2" /> Share via Email</Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>Share the summary via your default email client.</p>
+                </TooltipContent>
+            </Tooltip>
+        </TooltipProvider>
+      </CardContent>
+    </Card>
+  )
+}
+
 export function ResultsDisplay({ analysisState }: { analysisState: AnalysisState }) {
   const { extractedData, biasAnalysis, error } = analysisState;
 
@@ -70,6 +198,7 @@ export function ResultsDisplay({ analysisState }: { analysisState: AnalysisState
                 <ExtractedData data={extractedData} />
             </div>
             <div className="lg:col-span-2 space-y-8">
+                 <ActionsCard analysisState={analysisState} />
                  <DisparityChart />
                  {biasAnalysis.biasDetected && (
                     <AppealAdviceCard 

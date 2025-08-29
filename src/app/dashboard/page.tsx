@@ -18,12 +18,12 @@ export default function DashboardPage() {
         <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl">
           JusticeLens
         </h1>
-        <p className="mt-3 text-lg text-muted-foreground sm:text-xl">
-          Upload court records to uncover patterns of bias and inequality.
+        <p className="mt-3 max-w-2xl mx-auto text-lg text-muted-foreground sm:text-xl">
+          Upload court records to uncover patterns of bias and inequality in the justice system.
         </p>
       </div>
 
-      <Card className="w-full max-w-3xl mx-auto shadow-md">
+      <Card className="w-full max-w-3xl mx-auto shadow-lg">
         <CardHeader>
           <CardTitle className="text-2xl">Analyze Court Record</CardTitle>
           <CardDescription>
@@ -35,7 +35,7 @@ export default function DashboardPage() {
         </CardContent>
       </Card>
       
-      {state && <ResultsDisplay analysisState={state} />}
+      {state.extractedData && <ResultsDisplay analysisState={state} />}
     </div>
   );
 }
